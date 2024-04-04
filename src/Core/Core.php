@@ -4,7 +4,6 @@ namespace App\Core;
 
 use App\Http\Request;
 use App\Http\Response;
-use Exception;
 
 class Core
 {
@@ -26,6 +25,7 @@ class Core
                         'message' => 'Método HTTP inválido',
                         'status'  => 405
                     ], 405);
+                    return;
                 }
 
                 [$controller, $action] = explode('::', $route['action']);
@@ -40,12 +40,14 @@ class Core
                             'message' => 'Método não encontrado',
                             'status'  => 404
                         ], 404);
+                        return;
                     }
                 } else {
                     Response::json([
                         'message' => 'Controller não encontrado',
                         'status'  => 404
                     ], 404);
+                    return;
                 }
             }
         }
