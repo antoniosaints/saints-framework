@@ -2,7 +2,7 @@
 
 - Projeto de autoria própria `antonio costa dos santos - <costaantonio883@gmail.com>` com licença MIT
 
-### V1.0
+### @ V 1.0
 
 ### ADDED - Validations - Validações
 
@@ -12,4 +12,7 @@
     * email
     * required
     * cpf
-    * cnpj 
+    * cnpj
+* Tratamento de erros - usando exceptions
+* Roteamento de controllers - integrado direto no arquivo router
+* Tratamento de request e response - retornando e coletando json
