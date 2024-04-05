@@ -9,6 +9,7 @@ use PDO;
 class Model
 {
     protected $table;
+    protected $primary = 'id';
     protected $allowFields = [];
     protected $wheres = [];
 
@@ -46,7 +47,7 @@ class Model
         $stmt->bindValue(':value', '%' . $value . '%', PDO::PARAM_STR);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Retorna os resultados se houver algum, caso contrário retorna null
         return $results ? $results : null;
     }
@@ -103,11 +104,11 @@ class Model
     public function findById($id)
     {
         try {
-            $query = "SELECT * FROM " . $this->table . " WHERE id = :id";
+            $query = "SELECT * FROM " . $this->table . " WHERE " . $this->primary . " = :id";
             $stmt = Database::getConnection()->prepare($query);
             $stmt->execute(['id' => $id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }
@@ -133,15 +134,11 @@ class Model
         $columnsStr = implode(',', $columns);
         $placeholders = implode(',', array_fill(0, count($columns), '?'));
 
-        try {
-            $query = "INSERT INTO " . $this->table . " ($columnsStr) VALUES ($placeholders)";
-            $stmt = Database::getConnection()->prepare($query);
-            $stmt->execute($values);
-    
-            return Database::getConnection()->lastInsertId();
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
+        $query = "INSERT INTO " . $this->table . " ($columnsStr) VALUES ($placeholders)";
+        $stmt = Database::getConnection()->prepare($query);
+        $stmt->execute($values);
+
+        return Database::getConnection()->lastInsertId();
     }
 
     /**
@@ -152,14 +149,14 @@ class Model
      */
     public function delete(int $id)
     {
-        $query = "DELETE FROM " . $this->table . " WHERE id = :id";
+        $query = "DELETE FROM " . $this->table . " WHERE " . $this->primary . " = :id";
         $stmt = Database::getConnection()->prepare($query);
         $stmt->execute(['id' => $id]);
 
         return $stmt->rowCount();
     }
 
-     /**
+    /**
      * Executa uma consulta SQL personalizada.
      *
      * @param string $sql A consulta SQL a ser executada
@@ -171,7 +168,7 @@ class Model
         $stmt = Database::getConnection()->prepare($sql);
         $stmt->execute($params);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Retorna os resultados se houver algum, caso contrário retorna null
         return $results ? $results : null;
     }

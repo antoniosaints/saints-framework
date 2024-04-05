@@ -25,7 +25,7 @@ class UsuariosController extends BaseController
             self::responseJson([
                 'message' => $e->getMessage(),
                 'status'  => 400
-            ], 404);
+            ], $e->getCode());
         }
     }
 }

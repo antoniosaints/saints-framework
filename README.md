@@ -17,3 +17,4 @@
 * Roteamento de controllers - integrado direto no arquivo router
 * Tratamento de request e response - retornando e coletando json
 * Adicionado gestão de models 
+* Multibancos
