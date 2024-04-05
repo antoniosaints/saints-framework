@@ -6,11 +6,14 @@ use App\Http\Response;
 
 class BaseController {
 
-    protected $request;
-    protected $response;
-    public function __construct()
+    public static function request()
     {
-        $this->request = new Request();
-        $this->response = new Response();
+        return new Request();
+    }
+
+    public static function responseJson($data = null, $status = 200)
+    {
+        $response = new Response();
+        $response::json($data, $status);
     }
 }

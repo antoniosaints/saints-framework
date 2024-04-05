@@ -2,23 +2,27 @@
 namespace App\Controllers\Usuarios;
 
 use App\Controllers\BaseController;
+use App\Models\UsuarioModel;
 use App\Schemas\UsuariosSchema;
 use App\Validators\DatabaseValidator;
 use Exception;
 
 class UsuariosController extends BaseController
 {
+    public function __construct()
+    {
+        
+    }
     public function Create()
     {
-        $data = $this->request::getJson();
         try {
-            $data_validate = DatabaseValidator::validate(UsuariosSchema::createUser(), $data);
-            $this->response::json([
-                'data' => $data_validate,
-                'status' => 200
-            ]);
+            $Model = new UsuarioModel();
+            $data = self::request()::getJson();
+            $dataValidated = DatabaseValidator::validate(UsuariosSchema::createUser(), $data);
+            $usuarioCriado = $Model->save($dataValidated);
+            self::responseJson($usuarioCriado, 201);
         }catch (Exception $e) {
-            $this->response::json([
+            self::responseJson([
                 'message' => $e->getMessage(),
                 'status'  => 400
             ], 404);

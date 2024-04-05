@@ -6,8 +6,8 @@ class ExampleController extends BaseController
 {
     public function getJson()
     {
-        $data = $this->request::getJson();
+        $data = self::request()::getJson();
 
-        $this->response::json($data);
+        self::responseJson($data);
     }
 }

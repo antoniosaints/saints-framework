@@ -13,7 +13,9 @@ class Request
     {
         $json = json_decode(file_get_contents('php://input'), true) ?? [];
 
-        $data = match (self::method()) {
+        $method = self::method(); // Obtenha o método HTTP antes de usar a expressão `match`
+
+        $data = match ($method) {
             'GET' => self::getGet(),
             'POST', 'PUT', 'DELETE' => $json,
             default => $json
@@ -21,6 +23,7 @@ class Request
 
         return $data;
     }
+
 
     public static function getPost(string $key = null)
     {
@@ -32,7 +35,7 @@ class Request
         if (isset($_GET['url'])) {
             unset($_GET['url']);
         }
-        
+
         return $_GET[$key] ?? $_GET;
     }
 }
