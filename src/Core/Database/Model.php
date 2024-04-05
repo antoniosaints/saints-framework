@@ -10,13 +10,19 @@ class Model
 {
     protected $table;
     protected $primary = 'id';
+    protected $dbGroup = 'default';
     protected $allowFields = [];
     protected $wheres = [];
+    protected $connection;
 
     public function __construct()
     {
         if (!$this->table) {
             throw new Exception("A propriedade table não foi definida na classe do modelo.");
+        }
+
+        if (!$this->connection) {
+            $this->connection = Database::getConnection($this->dbGroup);
         }
     }
 
@@ -43,7 +49,7 @@ class Model
     public function findByLike(string $column, $value)
     {
         $sql = "SELECT * FROM " . $this->table . " WHERE $column LIKE :value";
-        $stmt = Database::getConnection()->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
         $stmt->bindValue(':value', '%' . $value . '%', PDO::PARAM_STR);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -73,7 +79,7 @@ class Model
         }
 
         $query = "SELECT * FROM " . $this->table . $whereClause;
-        $stmt = Database::getConnection()->prepare($query);
+        $stmt = $this->connection->prepare($query);
 
         foreach ($this->wheres as $column => $value) {
             $stmt->bindValue(":$column", $value);
@@ -91,7 +97,7 @@ class Model
     public function findAll()
     {
         $query = "SELECT * FROM " . $this->table;
-        $stmt = Database::getConnection()->query($query);
+        $stmt = $this->connection->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -105,7 +111,7 @@ class Model
     {
         try {
             $query = "SELECT * FROM " . $this->table . " WHERE " . $this->primary . " = :id";
-            $stmt = Database::getConnection()->prepare($query);
+            $stmt = $this->connection->prepare($query);
             $stmt->execute(['id' => $id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
@@ -135,10 +141,10 @@ class Model
         $placeholders = implode(',', array_fill(0, count($columns), '?'));
 
         $query = "INSERT INTO " . $this->table . " ($columnsStr) VALUES ($placeholders)";
-        $stmt = Database::getConnection()->prepare($query);
+        $stmt = $this->connection->prepare($query);
         $stmt->execute($values);
 
-        return Database::getConnection()->lastInsertId();
+        return $this->connection->lastInsertId();
     }
 
     /**
@@ -150,7 +156,7 @@ class Model
     public function delete(int $id)
     {
         $query = "DELETE FROM " . $this->table . " WHERE " . $this->primary . " = :id";
-        $stmt = Database::getConnection()->prepare($query);
+        $stmt = $this->connection->prepare($query);
         $stmt->execute(['id' => $id]);
 
         return $stmt->rowCount();
@@ -165,7 +171,7 @@ class Model
      */
     public function query(string $sql, array $params = [])
     {
-        $stmt = Database::getConnection()->prepare($sql);
+        $stmt = $this->connection->prepare($sql);
         $stmt->execute($params);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
