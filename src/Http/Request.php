@@ -9,7 +9,7 @@ class Request
         return $_SERVER['REQUEST_METHOD'];
     }
 
-    public static function getBody()
+    public static function getJson()
     {
         $json = json_decode(file_get_contents('php://input'), true) ?? [];
 
