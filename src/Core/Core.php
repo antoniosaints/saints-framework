@@ -29,11 +29,12 @@ class Core
                 }
 
                 [$controller, $action] = explode('::', $route['action']);
-                $controllerName = $prefixController . $controller;
+                $controllerReplace = str_replace("/", "\\", $controller);
+                $controllerName = $prefixController . $controllerReplace;
                 if (class_exists($controllerName)) {
                     $instance = new $controllerName();
                     if (method_exists($instance, $action)) {
-                        $instance->$action(new Request, new Response, $matches);
+                        $instance->$action(new Request, new Response);
                         return;
                     } else {
                         Response::json([

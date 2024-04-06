@@ -8,7 +8,7 @@ class UsuariosSchema
     {
         return [
             "nome"     => "required|string",
-            "idade"    => "integer",
+            "idade"    => "required|integer",
             "senha"    => "required|string",
         ];
     }

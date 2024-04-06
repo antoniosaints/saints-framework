@@ -18,10 +18,14 @@ use Exception;
  */
 class DatabaseValidator
 {
-    protected static $default = [
-        'required' => 'required',
-        'integer' => 'integer',
-        'string' => 'string'
+    protected $description = [
+        'required' => 'Define o campo como obrigatório',
+        'integer'  => 'Define o campo como inteiro',
+        'string'   => 'Define o campo como uma string',
+        'email'    => 'Define o campo como um email valido',
+        'cpf'      => 'Define o campo como um cpf valido',
+        'cnpj'     => 'Define o campo como um cnpj valido',
+        'date'     => 'Define o campo como uma data valida'
     ];
 
     public static function validate(array $rule, array $data)
@@ -58,6 +62,24 @@ class DatabaseValidator
                 if (in_array('integer', $regras)) {
                     if (!is_numeric($data[$key])) {
                         throw new Exception("O campo {$key} deve ser um inteiro");
+                    }
+                }
+
+                if (in_array('date', $regras)) {
+                    if (!self::is_date($data[$key])) {
+                        throw new Exception("O campo {$key} deve ser uma data");
+                    }
+                }
+
+                if (in_array('cpf', $regras)) {
+                    if (!self::is_cpf($data[$key])) {
+                        throw new Exception("O campo {$key} deve ser um cpf valido");
+                    }
+                }
+
+                if (in_array('cnpj', $regras)) {
+                    if (!self::is_cnpj($data[$key])) {
+                        throw new Exception("O campo {$key} deve ser um cnpj valido");
                     }
                 }
 
@@ -162,5 +184,18 @@ class DatabaseValidator
         }
 
         return true;
+    }
+
+    private static function is_date($date)
+    {
+        // Tenta converter a data em um timestamp usando strtotime()
+        $timestamp = strtotime($date);
+
+        // Verifica se a conversão foi bem-sucedida e se a data é válida
+        if ($timestamp === false || $timestamp === -1) {
+            return false; // Data inválida
+        } else {
+            return true; // Data válida
+        }
     }
 }

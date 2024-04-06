@@ -24,6 +24,19 @@ class Model
         if (!$this->connection) {
             $this->connection = Database::getConnection($this->dbGroup);
         }
+
+        $this->checkTableExists();
+    }
+
+    protected function checkTableExists()
+    {
+        $sql = "SHOW TABLES LIKE ?";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([$this->table]);
+
+        if ($stmt->rowCount() === 0) {
+            throw new Exception("A tabela '{$this->table}' não existe no banco de dados.", 500);
+        }
     }
 
     /**
@@ -177,5 +190,17 @@ class Model
 
         // Retorna os resultados se houver algum, caso contrário retorna null
         return $results ? $results : null;
+    }
+
+    /**
+     * Executa uma consulta SELECT para limpar a tabela.
+     *
+     * @return void
+     */
+    public function truncate()
+    {
+        $query = "TRUNCATE TABLE " . $this->table;
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
     }
 }
