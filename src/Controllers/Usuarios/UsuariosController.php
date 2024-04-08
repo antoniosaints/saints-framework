@@ -8,7 +8,6 @@ use App\Http\Response;
 use App\Models\UsuarioModel;
 use App\Schemas\UsuariosSchema;
 use Exception;
-use PDOException;
 
 class UsuariosController extends BaseController
 {
