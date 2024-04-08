@@ -13,6 +13,7 @@
     * required
     * cpf
     * cnpj
+    * date
 * Tratamento de erros - usando exceptions
 * Roteamento de controllers - integrado direto no arquivo router
 * Tratamento de request e response - retornando e coletando json
