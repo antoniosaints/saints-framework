@@ -18,6 +18,7 @@
         "robmorgan/phinx": "^0.16.0"
     }, 
     "scripts": {
+        "db:init": "php .\\vendor\\bin\\phinx init --format json",
         "migrate:up": "php .\\vendor\\bin\\phinx migrate",
         "migrate:down": "php .\\vendor\\bin\\phinx rollback",
         "migrate:status": "php .\\vendor\\bin\\phinx status",

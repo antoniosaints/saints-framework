@@ -22,7 +22,7 @@
 
 ### ADDED - Suporte a Migrations e Seeds com Phinx
 `08/04/2024`
-* Para começar a usar os models, migrations e seeds, copie o arquivo `phinx.example` e renomeie para `phinx.json` e informe as credenciais de banco de dados
+* Para começar a usar os models, migrations e seeds, execute `composer db:init` e no arquivo gerado `phinx.json` informe as credenciais de banco de dados
 * Crie uma nova migração com `composer new:migration` use PascalCase na nomeclatura da migration
 * Subir as migrations com `composer migrate:up`
 * Desfazer a migration com `composer migrate:down`
