@@ -7,13 +7,14 @@
 ### ADDED - Validations - Validações
 `01/04/2024`
 * Validações permitidas - 6
-    * string
-    * integer
-    * email
-    * required
-    * cpf
-    * cnpj
-    * date
+    * string  -> Verifica se o valor é um texto
+    * integer -> Verifica se o valor é um número
+    * email   -> Verifica se o valor é um email válido
+    * required -> Verifica se o campo chegou no body da requisição
+    * cpf -> Verifica se o campo é um CPF
+    * cnpj -> Verifica se o campo é um CNPJ
+    * date -> Verifica se valor é uma data válida
+    * password -> Verifica se o valor é uma senha válida `> 8 dígitos`;`Caractere especial`;`Uma letra maiúscula`;`Um número`
 * Tratamento de erros - usando exceptions
 * Roteamento de controllers - integrado direto no arquivo router
 * Tratamento de request e response - retornando e coletando json

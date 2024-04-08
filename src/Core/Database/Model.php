@@ -5,13 +5,12 @@ namespace App\Core\Database;
 
 use Exception;
 use PDO;
-use PDOException;
 
 class Model
 {
     protected $table;
     protected $primary = 'id';
-    protected $dbGroup = 'default';
+    protected $dbGroup = 'development';
     protected $allowFields = [];
     protected $wheres = [];
     protected $connection;
@@ -62,7 +61,6 @@ class Model
      */
     public function findByLike(string $column, $value)
     {
-        try {
             $sql = "SELECT * FROM " . $this->table . " WHERE $column LIKE :value";
             $stmt = $this->connection->prepare($sql);
             $stmt->bindValue(':value', '%' . $value . '%', PDO::PARAM_STR);
@@ -71,9 +69,6 @@ class Model
     
             // Retorna os resultados se houver algum, caso contrário retorna null
             return $results ? $results : null;
-        }catch(Exception $e){
-            throw new Exception($e->getMessage(), 500);
-        }
     }
 
     /**
@@ -83,7 +78,6 @@ class Model
      */
     public function find()
     {
-        try {
             $whereClause = '';
     
             if (!empty($this->wheres)) {
@@ -106,9 +100,6 @@ class Model
     
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }catch(Exception $e){
-            throw new Exception($e->getMessage(), 500);
-        }
     }
 
     /**
@@ -118,13 +109,9 @@ class Model
      */
     public function findAll()
     {
-        try{
             $query = "SELECT * FROM " . $this->table;
             $stmt = $this->connection->query($query);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }catch(Exception $e){
-            throw new Exception($e->getMessage(), 500);
-        }
     }
 
     /**
@@ -135,14 +122,10 @@ class Model
      */
     public function findById($id)
     {
-        try {
             $query = "SELECT * FROM " . $this->table . " WHERE " . $this->primary . " = :id";
             $stmt = $this->connection->prepare($query);
             $stmt->execute(['id' => $id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
     }
 
     /**
@@ -153,7 +136,6 @@ class Model
      */
     public function save(array $data)
     {
-        try {
             $columns = [];
             $values = [];
     
@@ -172,9 +154,7 @@ class Model
             $stmt->execute($values);
     
             return $this->connection->lastInsertId();
-        }catch(Exception $e) {
-            throw new Exception($e->getMessage(), 500);
-        }
+      
     }
 
     /**
@@ -185,15 +165,10 @@ class Model
      */
     public function delete(int $id)
     {
-        try {
             $query = "DELETE FROM " . $this->table . " WHERE " . $this->primary . " = :id";
             $stmt = $this->connection->prepare($query);
             $stmt->execute(['id' => $id]);
             return $stmt->rowCount();
-        }catch(Exception $e) {
-            throw new Exception($e->getMessage(), 500);
-        }
-
     }
 
     /**
@@ -205,16 +180,12 @@ class Model
      */
     public function query(string $sql, array $params = [])
     {
-        try {
             $stmt = $this->connection->prepare($sql);
             $stmt->execute($params);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
             // Retorna os resultados se houver algum, caso contrário retorna null
             return $results ? $results : null;
-        }catch(Exception $e) {
-            throw new Exception($e->getMessage(), 500);
-        }
     }
 
     /**
@@ -224,12 +195,8 @@ class Model
      */
     public function truncate()
     {
-        try {
             $query = "TRUNCATE TABLE " . $this->table;
             $stmt = $this->connection->prepare($query);
             $stmt->execute();
-        }catch(Exception $e) {
-            throw new Exception($e->getMessage(), 500);
-        }
     }
 }

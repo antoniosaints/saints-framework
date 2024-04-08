@@ -89,6 +89,12 @@ class DatabaseValidator
                     }
                 }
 
+                if (in_array('password', $regras)) {
+                    if (self::is_password($data[$key]) !== true) {
+                        throw new Exception(self::is_password($data[$key]));
+                    }
+                }
+
                 $validateData[$key] = $data[$key];
             }
         }
@@ -197,5 +203,36 @@ class DatabaseValidator
         } else {
             return true; // Data válida
         }
+    }
+
+    private static function is_password($password)
+    {
+        // Verificar se a senha contém pelo menos 8 caracteres
+        if (strlen($password) < 8) {
+            return "A senha deve ter pelo menos 8 caracteres.";
+        }
+
+        // Verificar se a senha contém pelo menos um número
+        if (!preg_match('/[0-9]/', $password)) {
+            return "A senha deve ter pelo menos um número.";
+        }
+
+        // Verificar se a senha contém pelo menos uma letra maiúscula
+        if (!preg_match('/[A-Z]/', $password)) {
+            return "A senha deve ter pelo menos uma letra maiúscula.";
+        }
+
+        // Verificar se a senha contém pelo menos uma letra minúscula
+        if (!preg_match('/[a-z]/', $password)) {
+            return "A senha deve ter pelo menos uma letra minúscula.";
+        }
+
+        // Verificar se a senha contém pelo menos um caractere especial
+        if (!preg_match('/[^A-Za-z0-9]/', $password)) {
+            return "A senha deve ter pelo menos um caractere especial.";
+        }
+
+        return true;
+
     }
 }
