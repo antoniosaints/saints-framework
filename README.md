@@ -27,4 +27,4 @@
 * Desfazer a migration com `composer migrate:down`
 * Verificar status da migração com `composer migrate:status`
 * Demais comandos disponíveis no arquivo `composer.json`
-* Mais informações sobre os demais métodos do phinx, acessar [https://book.cakephp.org/phinx/0/en/contents.html](Documentação completa)
+* Mais informações sobre os demais métodos do phinx, acessar [![Documentação completa](https://book.cakephp.org/phinx/0/en/contents.html)](https://book.cakephp.org/phinx/0/en/contents.html)
