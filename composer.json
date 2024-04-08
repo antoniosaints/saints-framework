@@ -22,8 +22,8 @@
         "migrate:up": "php .\\vendor\\bin\\phinx migrate",
         "migrate:down": "php .\\vendor\\bin\\phinx rollback",
         "migrate:status": "php .\\vendor\\bin\\phinx status",
-        "new:migration": "php .\\vendor\\bin\\phinx create",
+        "migration": "php .\\vendor\\bin\\phinx create",
         "seed:up": "php .\\vendor\\bin\\phinx seed:run",
-        "new:seed": "php .\\vendor\\bin\\phinx seed:create"
+        "seed": "php .\\vendor\\bin\\phinx seed:create"
     }
 }

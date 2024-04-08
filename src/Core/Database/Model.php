@@ -5,6 +5,7 @@ namespace App\Core\Database;
 
 use Exception;
 use PDO;
+use PDOException;
 
 class Model
 {
@@ -61,14 +62,18 @@ class Model
      */
     public function findByLike(string $column, $value)
     {
-        $sql = "SELECT * FROM " . $this->table . " WHERE $column LIKE :value";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue(':value', '%' . $value . '%', PDO::PARAM_STR);
-        $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Retorna os resultados se houver algum, caso contrário retorna null
-        return $results ? $results : null;
+        try {
+            $sql = "SELECT * FROM " . $this->table . " WHERE $column LIKE :value";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->bindValue(':value', '%' . $value . '%', PDO::PARAM_STR);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            // Retorna os resultados se houver algum, caso contrário retorna null
+            return $results ? $results : null;
+        }catch(Exception $e){
+            throw new Exception($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -78,28 +83,32 @@ class Model
      */
     public function find()
     {
-        $whereClause = '';
-
-        if (!empty($this->wheres)) {
-            $whereClause = ' WHERE ';
-            $conditions = [];
-
-            foreach ($this->wheres as $column => $value) {
-                $conditions[] = "$column = :$column";
+        try {
+            $whereClause = '';
+    
+            if (!empty($this->wheres)) {
+                $whereClause = ' WHERE ';
+                $conditions = [];
+    
+                foreach ($this->wheres as $column => $value) {
+                    $conditions[] = "$column = :$column";
+                }
+    
+                $whereClause .= implode(' AND ', $conditions);
             }
-
-            $whereClause .= implode(' AND ', $conditions);
+    
+            $query = "SELECT * FROM " . $this->table . $whereClause;
+            $stmt = $this->connection->prepare($query);
+    
+            foreach ($this->wheres as $column => $value) {
+                $stmt->bindValue(":$column", $value);
+            }
+    
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(Exception $e){
+            throw new Exception($e->getMessage(), 500);
         }
-
-        $query = "SELECT * FROM " . $this->table . $whereClause;
-        $stmt = $this->connection->prepare($query);
-
-        foreach ($this->wheres as $column => $value) {
-            $stmt->bindValue(":$column", $value);
-        }
-
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -109,9 +118,13 @@ class Model
      */
     public function findAll()
     {
-        $query = "SELECT * FROM " . $this->table;
-        $stmt = $this->connection->query($query);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try{
+            $query = "SELECT * FROM " . $this->table;
+            $stmt = $this->connection->query($query);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(Exception $e){
+            throw new Exception($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -140,24 +153,28 @@ class Model
      */
     public function save(array $data)
     {
-        $columns = [];
-        $values = [];
-
-        foreach ($data as $key => $value) {
-            if (in_array($key, $this->allowFields)) {
-                $columns[] = $key;
-                $values[] = $value;
+        try {
+            $columns = [];
+            $values = [];
+    
+            foreach ($data as $key => $value) {
+                if (in_array($key, $this->allowFields)) {
+                    $columns[] = $key;
+                    $values[] = $value;
+                }
             }
+    
+            $columnsStr = implode(',', $columns);
+            $placeholders = implode(',', array_fill(0, count($columns), '?'));
+    
+            $query = "INSERT INTO " . $this->table . " ($columnsStr) VALUES ($placeholders)";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute($values);
+    
+            return $this->connection->lastInsertId();
+        }catch(Exception $e) {
+            throw new Exception($e->getMessage(), 500);
         }
-
-        $columnsStr = implode(',', $columns);
-        $placeholders = implode(',', array_fill(0, count($columns), '?'));
-
-        $query = "INSERT INTO " . $this->table . " ($columnsStr) VALUES ($placeholders)";
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute($values);
-
-        return $this->connection->lastInsertId();
     }
 
     /**
@@ -168,11 +185,15 @@ class Model
      */
     public function delete(int $id)
     {
-        $query = "DELETE FROM " . $this->table . " WHERE " . $this->primary . " = :id";
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute(['id' => $id]);
+        try {
+            $query = "DELETE FROM " . $this->table . " WHERE " . $this->primary . " = :id";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute(['id' => $id]);
+            return $stmt->rowCount();
+        }catch(Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
 
-        return $stmt->rowCount();
     }
 
     /**
@@ -184,12 +205,16 @@ class Model
      */
     public function query(string $sql, array $params = [])
     {
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute($params);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Retorna os resultados se houver algum, caso contrário retorna null
-        return $results ? $results : null;
+        try {
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute($params);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            // Retorna os resultados se houver algum, caso contrário retorna null
+            return $results ? $results : null;
+        }catch(Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -199,8 +224,12 @@ class Model
      */
     public function truncate()
     {
-        $query = "TRUNCATE TABLE " . $this->table;
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute();
+        try {
+            $query = "TRUNCATE TABLE " . $this->table;
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute();
+        }catch(Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
     }
 }

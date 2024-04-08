@@ -8,6 +8,7 @@ use App\Http\Response;
 use App\Models\UsuarioModel;
 use App\Schemas\UsuariosSchema;
 use Exception;
+use PDOException;
 
 class UsuariosController extends BaseController
 {
@@ -23,7 +24,8 @@ class UsuariosController extends BaseController
                 'id'      => $user,
                 'status'  => 200
             ], 200);
-        }catch (Exception $e) { // Tratamento de erro
+        }
+        catch (Exception $e) { // Tratamento de erro
             ErrorHandler::handle($e); // Chama o tratamento de erro
         }
     }
