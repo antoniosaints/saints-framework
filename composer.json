@@ -14,6 +14,15 @@
         }
     ],
     "require": {
-        "php": "^7.3|^8.0"
+        "php": "^8.1",
+        "robmorgan/phinx": "^0.16.0"
+    }, 
+    "scripts": {
+        "migrate:up": "php .\\vendor\\bin\\phinx migrate",
+        "migrate:down": "php .\\vendor\\bin\\phinx rollback",
+        "migrate:status": "php .\\vendor\\bin\\phinx status",
+        "new:migration": "php .\\vendor\\bin\\phinx create",
+        "seed:up": "php .\\vendor\\bin\\phinx seed:run",
+        "new:seed": "php .\\vendor\\bin\\phinx seed:create"
     }
 }

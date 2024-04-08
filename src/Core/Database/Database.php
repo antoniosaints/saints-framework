@@ -23,14 +23,16 @@ class Database {
     }
 
     // Método para obter a conexão com o banco de dados
-    public static function getConnection(string $dbGroup = "default")
+    public static function getConnection(string $dbGroup = "development")
     {
-        $config = new Config();
-        $group = $config->connections[$dbGroup] ?? $config->connections['default'];
+        $phinxConfig = json_decode(file_get_contents(__DIR__ . '/../../../phinx.json'), true);
+
+         // Obtém as configurações do ambiente especificado
+        $group = $phinxConfig['environments'][$dbGroup] ?? $phinxConfig['environments']['development'];
         
         // Verifica se a conexão já foi estabelecida, se não, estabelece
         if (!isset(self::$connection)) {
-            self::connect($group['host'], $group['dbname'], $group['user'], $group['password']);
+            self::connect($group['host'], $group['name'], $group['user'], $group['pass']);
         }
         return self::$connection;
     }
