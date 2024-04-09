@@ -17,9 +17,9 @@ class UsuariosController extends BaseController
             $Model = new UsuarioModel(); // Instanciando o Model
             $Post = $request::getJson();
             $dataValidada = self::validateSchema(UsuariosSchema::createUser(), $Post);
-            $usuarioSave = $Model->truncate();
+            $usuarioSave = $Model->save($dataValidada);
             $response::json([ // Retorna os dados no formato JSON
-                'message' => 'Usuário criado com sucesso',
+                'message' => "Usuário criado com sucesso",
                 'id'      => $usuarioSave,
                 'status'  => 200
             ], 200);

@@ -12,7 +12,7 @@ RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
     Deny from all
 </FilesMatch>
 
-<FilesMatch "^(index.php)?$">
+<FilesMatch "^(index.php)?$|^([^.]+)$">
     Order Deny,Allow
     Allow from all
 </FilesMatch>
