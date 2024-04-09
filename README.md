@@ -32,3 +32,7 @@
 * Demais comandos disponíveis no arquivo `composer.json`
 * Mais informações sobre os demais métodos do phinx, acessar [Documentação completa](https://book.cakephp.org/phinx/0/en/migrations.html#custom-column-types-default-values)
 
+### LAUNCH - Versão 0.1.0-alpha
+`09/04/2024`
+* O usuário já pode usar uma instância do framework
+
