@@ -18,7 +18,7 @@ class Model
     public function __construct()
     {
         if (!$this->table) {
-            throw new Exception("A propriedade table não foi definida na classe do modelo.");
+            throw new Exception("A propriedade table não foi definida na classe do modelo.", 404);
         }
 
         if (!$this->connection) {

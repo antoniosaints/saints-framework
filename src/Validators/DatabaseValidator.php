@@ -55,43 +55,43 @@ class DatabaseValidator
 
                 if (in_array('email', $regras)) {
                     if (!self::is_email($data[$key])) {
-                        throw new Exception("O campo {$key} deve ser um email valido");
+                        throw new Exception("O campo {$key} deve ser um email valido", 404);
                     }
                 }
 
                 if (in_array('integer', $regras)) {
                     if (!is_numeric($data[$key])) {
-                        throw new Exception("O campo {$key} deve ser um inteiro");
+                        throw new Exception("O campo {$key} deve ser um inteiro", 404);
                     }
                 }
 
                 if (in_array('date', $regras)) {
                     if (!self::is_date($data[$key])) {
-                        throw new Exception("O campo {$key} deve ser uma data");
+                        throw new Exception("O campo {$key} deve ser uma data", 404);
                     }
                 }
 
                 if (in_array('cpf', $regras)) {
                     if (!self::is_cpf($data[$key])) {
-                        throw new Exception("O campo {$key} deve ser um cpf valido");
+                        throw new Exception("O campo {$key} deve ser um cpf valido", 404);
                     }
                 }
 
                 if (in_array('cnpj', $regras)) {
                     if (!self::is_cnpj($data[$key])) {
-                        throw new Exception("O campo {$key} deve ser um cnpj valido");
+                        throw new Exception("O campo {$key} deve ser um cnpj valido", 404);
                     }
                 }
 
                 if (in_array('string', $regras)) {
                     if (!is_string($data[$key])) {
-                        throw new Exception("O campo {$key} deve ser uma string");
+                        throw new Exception("O campo {$key} deve ser uma string", 404);
                     }
                 }
 
                 if (in_array('password', $regras)) {
                     if (self::is_password($data[$key]) !== true) {
-                        throw new Exception(self::is_password($data[$key]));
+                        throw new Exception(self::is_password($data[$key]), 404);
                     }
                 }
 

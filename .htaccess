@@ -5,3 +5,14 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_URI} !^/index\.php$
 
 RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# Permitir acesso ao index.php e ao diretório raiz
+<FilesMatch ".*">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^(index.php)?$">
+    Order Deny,Allow
+    Allow from all
+</FilesMatch>

@@ -15,17 +15,31 @@ class UsuariosController extends BaseController
     {
         try {
             $Model = new UsuarioModel(); // Instanciando o Model
-            $body = $request::getJson(); // Recebe os dados do JSON enviados
-            $data = self::validateSchema(UsuariosSchema::createUser(), $body); // Valida os dados do JSON
-            $user = $Model->save($data); // Salva os dados no Model
+            $Post = $request::getJson();
+            $dataValidada = self::validateSchema(UsuariosSchema::createUser(), $Post);
+            $usuarioSave = $Model->truncate();
             $response::json([ // Retorna os dados no formato JSON
                 'message' => 'Usuário criado com sucesso',
-                'id'      => $user,
+                'id'      => $usuarioSave,
                 'status'  => 200
             ], 200);
         }
         catch (Exception $e) { // Tratamento de erro
             ErrorHandler::handle($e); // Chama o tratamento de erro
+        }
+    }
+
+    public function getJson(Request $request, Response $response)
+    {
+        try {
+            $Model = new UsuarioModel();
+    
+            $response::json([
+                "data" => $Model->findAll(),
+                "status"  => 200
+            ], 200);
+        }catch (Exception $e) {
+            ErrorHandler::handle($e);
         }
     }
 }

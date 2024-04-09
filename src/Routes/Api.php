@@ -2,7 +2,7 @@
 
 use App\Http\Route;
 
-Route::post("/", "ExampleController::getJson");
+Route::get("/", "Usuarios/UsuariosController::getJson");
 
 // Rotas usuarios
 Route::post("/users", "Usuarios/UsuariosController::Create");
