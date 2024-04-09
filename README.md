@@ -21,6 +21,7 @@
 * Adicionado gestão de models 
 * Multibancos
 
+
 ### ADDED - Suporte a Migrations e Seeds com Phinx
 `08/04/2024`
 * Para começar a usar os models, migrations e seeds, execute `composer db:init` e no arquivo gerado `phinx.json` informe as credenciais de banco de dados
@@ -30,4 +31,8 @@
 * Verificar status da migração com `composer migrate:status`
 * Demais comandos disponíveis no arquivo `composer.json`
 * Mais informações sobre os demais métodos do phinx, acessar [Documentação completa](https://book.cakephp.org/phinx/0/en/migrations.html#custom-column-types-default-values)
+
+### LAUNCH - Versão 0.1.0-alpha
+`09/04/2024`
+* O usuário já pode usar uma instância do framework
 
