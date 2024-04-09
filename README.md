@@ -6,7 +6,7 @@
 
 ### ADDED - Validations - Validações
 `01/04/2024`
-* Validações permitidas - 6
+* Validações permitidas
     * string  -> Verifica se o valor é um texto
     * integer -> Verifica se o valor é um número
     * email   -> Verifica se o valor é um email válido
