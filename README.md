@@ -21,6 +21,7 @@
 * Adicionado gestão de models 
 * Multibancos
 
+
 ### ADDED - Suporte a Migrations e Seeds com Phinx
 `08/04/2024`
 * Para começar a usar os models, migrations e seeds, execute `composer db:init` e no arquivo gerado `phinx.json` informe as credenciais de banco de dados
