@@ -13,6 +13,8 @@ class Model
     protected $dbGroup = 'development';
     protected $allowFields = [];
     protected $wheres = [];
+    protected $likes = [];
+    protected $orderBy;
     protected $connection;
 
     public function __construct()
@@ -26,6 +28,19 @@ class Model
         }
 
         $this->checkTableExists();
+    }
+
+    /**
+     * Adiciona uma cláusula ORDER BY à consulta.
+     *
+     * @param string $column A coluna pela qual ordenar
+     * @param string $direction A direção da ordenação (ASC ou DESC)
+     * @return $this
+     */
+    public function orderBy(string $column, string $direction = 'ASC')
+    {
+        $this->orderBy = "ORDER BY $column $direction";
+        return $this;
     }
 
     protected function checkTableExists()
@@ -49,6 +64,15 @@ class Model
     public function where($column, $value)
     {
         $this->wheres[$column] = $value;
+        return $this;
+    }
+
+    /**
+     * Adiciona condições LIKE à consulta.
+     */
+    public function like($column, $value)
+    {
+        $this->likes[$column] = $value;
         return $this;
     }
 
@@ -79,28 +103,44 @@ class Model
     public function find()
     {
         $whereClause = '';
+        $orderByClause = '';
 
-        if (!empty($this->wheres)) {
+        if (!empty($this->wheres) || !empty($this->likes)) {
             $whereClause = ' WHERE ';
-            $conditions = [];
 
+            $conditions = [];
             foreach ($this->wheres as $column => $value) {
-                $conditions[] = "$column = :$column";
+                $conditions[] = "`$column` = :$column"; // Adiciona backticks ao redor do nome da coluna
+            }
+
+            foreach ($this->likes as $column => $value) {
+                $conditions[] = "`$column` LIKE :$column"; // Adiciona backticks ao redor do nome da coluna
             }
 
             $whereClause .= implode(' AND ', $conditions);
         }
 
-        $query = "SELECT * FROM " . $this->table . $whereClause;
+        if (!empty($this->orderBy)) {
+            $orderByClause = ' ' . $this->orderBy;
+        }
+
+        $query = "SELECT * FROM " . $this->table . $whereClause . $orderByClause;
         $stmt = $this->connection->prepare($query);
 
         foreach ($this->wheres as $column => $value) {
             $stmt->bindValue(":$column", $value);
         }
 
+        // Vincula os valores dos likes
+        foreach ($this->likes as $column => $value) {
+            $stmt->bindValue(":$column", '%' . $value . '%', PDO::PARAM_STR);
+        }
+
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
 
     /**
      * Executa uma consulta SELECT para recuperar todos os registros.
@@ -109,7 +149,13 @@ class Model
      */
     public function findAll()
     {
-        $query = "SELECT * FROM " . $this->table;
+        $orderByClause = '';
+
+        if (!empty($this->orderBy)) {
+            $orderByClause = ' ' . $this->orderBy;
+        }
+
+        $query = "SELECT * FROM " . $this->table . $orderByClause;
         $stmt = $this->connection->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -133,7 +179,7 @@ class Model
      */
     public function update(int $id, array $data): bool
     {
-     
+
         // Prepara a string de atualização
         $updates = [];
         foreach ($data as $key => $value) {
