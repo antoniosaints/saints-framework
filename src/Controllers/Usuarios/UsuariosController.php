@@ -11,13 +11,16 @@ use Exception;
 
 class UsuariosController extends BaseController
 {
+
+    public function __construct(
+        protected $UsuarioModel = new UsuarioModel()
+    ){}
     public function Create(Request $request, Response $response)
     {
-        try {
-            $Model = new UsuarioModel(); // Instanciando o Model
+        try { // Instanciando o Model
             $Post = $request::getJson();
             $dataValidada = self::validateSchema(UsuariosSchema::createUser(), $Post);
-            $usuarioSave = $Model->save($dataValidada);
+            $usuarioSave = $this->UsuarioModel->save($dataValidada);
             $response::json([ // Retorna os dados no formato JSON
                 'message' => "Usuário criado com sucesso",
                 'id'      => $usuarioSave
@@ -31,10 +34,8 @@ class UsuariosController extends BaseController
     public function getJson($_, Response $response)
     {
         try {
-            $Model = new UsuarioModel();
-    
             $response::json([
-                "data" => $Model->findAll()
+                "data" => $this->UsuarioModel->find()
             ]);
         }catch (Exception $e) {
             ErrorHandler::handle($e);
