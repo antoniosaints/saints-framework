@@ -18,10 +18,10 @@ class Core
             $pattern = "#^" . preg_replace("/{id}/", "([\w-]+)", $route['path']) . "$#";
             if (preg_match($pattern, $url, $matches)) {
                 array_shift($matches);
+                $is_routed = true;
 
                 if ($route['method'] === Request::method()) {
                     $is_http_method = true;
-                    $is_routed = true;
                     [$controller, $action] = explode('::', $route['action']);
                     $controllerName = $prefixController . str_replace("/", "\\", $controller);
     
@@ -39,8 +39,6 @@ class Core
                         return;
                     }
                 }
-            }else {
-                
             }
         }
 
@@ -59,16 +57,14 @@ class Core
     private static function handleMethodNotAllowed()
     {
         Response::json([
-            'message' => 'Método HTTP inválido',
-            'status'  => 405
+            'message' => 'Método HTTP inválido'
         ], 405);
     }
 
     private static function handleNotFound($message)
     {
         Response::json([
-            'message' => $message,
-            'status'  => 404
+            'message' => $message
         ], 404);
     }
 }

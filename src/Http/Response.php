@@ -7,6 +7,11 @@ class Response
     {
         http_response_code($code);
         header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Powered-By: saints-framework');
+        if (!array_key_exists("status", $data)) {
+            $data["status"] = $code;
+        }
         echo json_encode($data);
     }
 }

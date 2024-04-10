@@ -20,8 +20,7 @@ class UsuariosController extends BaseController
             $usuarioSave = $Model->save($dataValidada);
             $response::json([ // Retorna os dados no formato JSON
                 'message' => "Usuário criado com sucesso",
-                'id'      => $usuarioSave,
-                'status'  => 200
+                'id'      => $usuarioSave
             ], 200);
         }
         catch (Exception $e) { // Tratamento de erro
@@ -29,15 +28,14 @@ class UsuariosController extends BaseController
         }
     }
 
-    public function getJson(Request $request, Response $response)
+    public function getJson($_, Response $response)
     {
         try {
             $Model = new UsuarioModel();
     
             $response::json([
-                "data" => $Model->findAll(),
-                "status"  => 200
-            ], 200);
+                "data" => $Model->findAll()
+            ]);
         }catch (Exception $e) {
             ErrorHandler::handle($e);
         }
