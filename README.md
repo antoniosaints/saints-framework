@@ -36,3 +36,10 @@
 `09/04/2024`
 * O usuário já pode usar uma instância do framework
 
+### FIX - Correções de segurança e melhorias
+`10/04/2024`
+* Ajustado o core da aplicação para lidar com todos os tipos de erros possíveis
+* O utilizador poderá criar rotas para o mesmo endpoint, passando métodos http diferentes
+* O response foi remodelado, passando `status` no body da response por padrão
+* O Handler de exceptions trata todas as exceptions, incluindo as do PDO
+* Todos os métodos recebem `Request` e `Response` como injeção de dependência por padrão
