@@ -6,7 +6,7 @@ namespace App\Core\Database;
 use Exception;
 use PDO;
 
-class Model
+abstract class Model
 {
     protected $table;
     protected $primary = 'id';
@@ -31,7 +31,7 @@ class Model
         $this->checkTableExists();
     }
 
-    public function select(array $fields)
+    public function select(string ...$fields)
     {
         $this->fields = implode(", ", $fields);
         return $this;
@@ -68,9 +68,15 @@ class Model
      * @param mixed $value Valor para comparar
      * @return $this
      */
-    public function where($column, $value)
+    public function where(string|array $column, $value = null)
     {
-        $this->wheres[$column] = $value;
+        if (is_array($column)) {
+            foreach ($column as $key => $value) {
+                $this->wheres[$key] = $value;
+            }
+        } else {
+            $this->wheres[$column] = $value;
+        }
         return $this;
     }
 
