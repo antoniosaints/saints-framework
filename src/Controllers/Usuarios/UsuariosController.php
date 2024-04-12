@@ -2,9 +2,9 @@
 namespace App\Controllers\Usuarios;
 
 use App\Controllers\BaseController;
-use App\Http\ErrorHandler;
-use App\Http\Request;
-use App\Http\Response;
+use App\Core\Http\ErrorHandler;
+use App\Core\Http\Request;
+use App\Core\Http\Response;
 use App\Models\UsuarioModel;
 use App\Schemas\UsuariosSchema;
 use Exception;

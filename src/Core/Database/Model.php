@@ -11,6 +11,7 @@ class Model
     protected $table;
     protected $primary = 'id';
     protected $dbGroup = 'development';
+    protected $fields = "*";
     protected $allowFields = [];
     protected $wheres = [];
     protected $likes = [];
@@ -28,6 +29,12 @@ class Model
         }
 
         $this->checkTableExists();
+    }
+
+    public function select(array $fields)
+    {
+        $this->fields = implode(", ", $fields);
+        return $this;
     }
 
     /**
@@ -85,7 +92,7 @@ class Model
      */
     public function findByLike(string $column, $value)
     {
-        $sql = "SELECT * FROM " . $this->table . " WHERE $column LIKE :value";
+        $sql = "SELECT {$this->fields} FROM " . $this->table . " WHERE $column LIKE :value";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue(':value', '%' . $value . '%', PDO::PARAM_STR);
         $stmt->execute();
@@ -124,7 +131,7 @@ class Model
             $orderByClause = ' ' . $this->orderBy;
         }
 
-        $query = "SELECT * FROM " . $this->table . $whereClause . $orderByClause;
+        $query = "SELECT {$this->fields} FROM " . $this->table . $whereClause . $orderByClause;
         $stmt = $this->connection->prepare($query);
 
         foreach ($this->wheres as $column => $value) {
@@ -155,7 +162,7 @@ class Model
             $orderByClause = ' ' . $this->orderBy;
         }
 
-        $query = "SELECT * FROM " . $this->table . $orderByClause;
+        $query = "SELECT {$this->fields} FROM " . $this->table . $orderByClause;
         $stmt = $this->connection->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -168,7 +175,7 @@ class Model
      */
     public function findById($id)
     {
-        $query = "SELECT * FROM " . $this->table . " WHERE " . $this->primary . " = :id";
+        $query = "SELECT {$this->fields} FROM " . $this->table . " WHERE " . $this->primary . " = :id";
         $stmt = $this->connection->prepare($query);
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http;
+namespace App\Core\Http;
 
 use Exception;
 use Throwable;
