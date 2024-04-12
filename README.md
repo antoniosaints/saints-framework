@@ -43,3 +43,4 @@
 * O response foi remodelado, passando `status` no body da response por padrão
 * O Handler de exceptions trata todas as exceptions, incluindo as do PDO
 * Todos os métodos recebem `Request` e `Response` como injeção de dependência por padrão
+* Adicionado HttpService, deixando o usuário confortável com as nomeclaturas `get`, `post`, `put`, `patch` e `delete`, sem se preocupar com validações de CURL

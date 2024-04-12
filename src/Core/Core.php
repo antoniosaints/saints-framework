@@ -2,8 +2,8 @@
 
 namespace App\Core;
 
-use App\Http\Request;
-use App\Http\Response;
+use App\Core\Http\Request;
+use App\Core\Http\Response;
 
 class Core
 {
