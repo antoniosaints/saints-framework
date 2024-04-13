@@ -83,9 +83,15 @@ abstract class Model
     /**
      * Adiciona condições LIKE à consulta.
      */
-    public function like($column, $value)
+    public function like(string|array $column, $value = null)
     {
-        $this->likes[$column] = $value;
+        if (is_array($column)) {
+            foreach ($column as $key => $value) {
+                $this->likes[$key] = $value;
+            }
+        } else {
+            $this->likes[$column] = $value;
+        }
         return $this;
     }
 
