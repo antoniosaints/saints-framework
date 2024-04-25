@@ -12,6 +12,7 @@ abstract class Model
     protected $primary = 'id';
     protected $dbGroup = 'development';
     protected $fields = "*";
+    protected $limit;
     protected $allowFields = [];
     protected $wheres = [];
     protected $likes = [];
@@ -59,6 +60,12 @@ abstract class Model
         if ($stmt->rowCount() === 0) {
             throw new Exception("A tabela '{$this->table}' não existe no banco de dados.", 500);
         }
+    }
+
+    public function limit(int $limit, int $offset = 0)
+    {
+        $this->limit = " LIMIT $offset, $limit";
+        return $this;
     }
 
     /**
@@ -143,7 +150,7 @@ abstract class Model
             $orderByClause = ' ' . $this->orderBy;
         }
 
-        $query = "SELECT {$this->fields} FROM " . $this->table . $whereClause . $orderByClause;
+        $query = "SELECT {$this->fields} FROM " . $this->table . $whereClause . $orderByClause . $this->limit;
         $stmt = $this->connection->prepare($query);
 
         foreach ($this->wheres as $column => $value) {
