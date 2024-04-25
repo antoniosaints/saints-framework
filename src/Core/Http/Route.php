@@ -5,13 +5,15 @@ namespace App\Core\Http;
 class Route
 {
     private static $routes = [];
+    private static $currentGroupMiddleware = [];
 
     public static function get(string $path, string $action)
     {
         self::$routes[] = [
             'action' => $action,
             'path'   => $path,
-            'method' => 'GET'
+            'method' => 'GET',
+            'middleware' => self::$currentGroupMiddleware
         ];
     }
 
@@ -20,7 +22,8 @@ class Route
         self::$routes[] = [
             'action' => $action,
             'path'   => $path,
-            'method' => 'POST'
+            'method' => 'POST',
+            'middleware' => self::$currentGroupMiddleware
         ];
     }
 
@@ -29,7 +32,8 @@ class Route
         self::$routes[] = [
             'action' => $action,
             'path'   => $path,
-            'method' => 'PUT'
+            'method' => 'PUT',
+            'middleware' => self::$currentGroupMiddleware
         ];
     }
 
@@ -38,9 +42,23 @@ class Route
         self::$routes[] = [
             'action' => $action,
             'path'   => $path,
-            'method' => 'DELETE'
+            'method' => 'DELETE',
+            'middleware' => self::$currentGroupMiddleware
         ];
     }
+
+    public static function middleware(string $middleware)
+    {
+        self::$currentGroupMiddleware[] = $middleware;
+    }
+
+    public static function group($callback)
+    {
+        $oldMiddleware = self::$currentGroupMiddleware;
+        call_user_func($callback);
+        self::$currentGroupMiddleware = $oldMiddleware;
+    }
+
 
     public static function routes()
     {
