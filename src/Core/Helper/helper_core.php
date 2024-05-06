@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
+defined('SCHEME') || define('SCHEME', 'http');
 defined('APP_PATH') || define('APP_PATH', __DIR__);
-defined('BASE_URL') || define('BASE_URL', $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']);
+defined('BASE_URL') || define('BASE_URL', SCHEME . '://' . $_SERVER['HTTP_HOST']);
 defined('SAINTSMVC_ENV') || define('SAINTSMVC_ENV', 'dev');
 
 if (!function_exists('baseUrl')) {

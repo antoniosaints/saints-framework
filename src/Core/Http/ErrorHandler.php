@@ -11,7 +11,7 @@ class ErrorHandler
 {
     public static function handle(Throwable $exception, Response $response = null)
     {
-        $pdo_erros = require_once __DIR__ . '/../Core/Errors/PDOErros.php';
+        $pdo_erros = require_once 'PDOErros.php';
         
         if ($response === null) {
             $response = new Response();
