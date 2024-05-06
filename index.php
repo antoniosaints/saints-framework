@@ -18,6 +18,10 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 
 require_once __DIR__ . '/vendor/autoload.php';
+<<<<<<< HEAD
+=======
+require_once __DIR__ . '/src/Core/Http/HeaderCheck.php';
+>>>>>>> 3d485545d83e4c1cc5b11be721668636917046ef
 require_once __DIR__ . '/src/Core/Helper/helper_core.php';
 
 foreach (glob(__DIR__ . '/src/Routes/*.php') as $filename) {
