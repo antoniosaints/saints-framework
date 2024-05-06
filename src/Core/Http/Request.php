@@ -24,6 +24,10 @@ class Request
         return $data;
     }
 
+    public static function getHeaders()
+    {
+        return getallheaders();
+    }
 
     public static function getPost(string $key = null)
     {

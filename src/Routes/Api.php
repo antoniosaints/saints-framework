@@ -1,9 +1,13 @@
 <?php
 use App\Core\Http\Route;
 
-Route::group(function () {
-    Route::middleware("AuthMiddleware");
-    //Rotas privadas
+
+Route::group(function () { // grupo de rotas privadas
+    Route::middleware("AuthMiddleware"); 
+    // Rotas abaixo do middleware
 });
-Route::get("/user", "Usuarios/UsuariosController::getJson");
-Route::post("/user", "Usuarios/UsuariosController::Create");
+
+Route::group(function () { // grupo de rotas publicas
+    Route::get("/user", "Usuarios/UsuariosController::getJson");
+    Route::post("/user", "Usuarios/UsuariosController::Create");
+});
