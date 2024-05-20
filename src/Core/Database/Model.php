@@ -3,6 +3,7 @@
 
 namespace App\Core\Database;
 
+use App\Core\Http\Response;
 use Exception;
 use PDO;
 
@@ -21,15 +22,20 @@ abstract class Model
 
     public function __construct()
     {
-        if (!$this->table) {
-            throw new Exception("A propriedade table não foi definida na classe do modelo.", 404);
+        try {
+            if (!$this->table) {
+                throw new Exception("A propriedade table não foi definida na classe do modelo.", 404);
+            }
+    
+            if (!$this->connection) {
+                $this->connection = Database::getConnection($this->dbGroup);
+            }
+    
+            $this->checkTableExists();
+        }catch (Exception $e) {
+            Response::json($e->getMessage(), 500);
+            exit;
         }
-
-        if (!$this->connection) {
-            $this->connection = Database::getConnection($this->dbGroup);
-        }
-
-        $this->checkTableExists();
     }
 
     public function select(string ...$fields)
@@ -56,10 +62,6 @@ abstract class Model
         $sql = "SHOW TABLES LIKE ?";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute([$this->table]);
-
-        if ($stmt->rowCount() === 0) {
-            throw new Exception("A tabela '{$this->table}' não existe no banco de dados.", 500);
-        }
     }
 
     public function limit(int $limit, int $offset = 0)
