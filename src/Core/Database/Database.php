@@ -13,12 +13,8 @@ class Database
     // Método para estabelecer a conexão com o banco de dados
     public static function connect($adapter, $host, $dbname, $port, $user, $password, $charset)
     {
-        try {
-            self::$connection = new PDO("$adapter:host=$host;dbname=$dbname;port=$port;charset=$charset", $user, $password);
-            self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            throw new Exception("Erro ao conectar ao banco de dados: " . $e->getMessage(), 500);
-        }
+        self::$connection = new PDO("$adapter:host=$host;dbname=$dbname;port=$port;charset=$charset", $user, $password);
+        self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     // Método para obter a conexão com o banco de dados
@@ -40,7 +36,11 @@ class Database
             'charset' => $group['charset'] ?? 'utf8mb4',
         ];
 
-        self::connect(...array_values($config));
+        try {
+            self::connect(...array_values($config));
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao conectar ao banco de dados: " . $e->getMessage(), 500);
+        }
 
         return self::$connection;
     }
