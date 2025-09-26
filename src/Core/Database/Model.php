@@ -123,6 +123,26 @@ abstract class Model
         return $results ? $results : null;
     }
 
+    public function findLike(array $columns, string $value)
+    {
+        if (empty($columns)) return null;
+
+        $sql = "SELECT {$this->fields} FROM {$this->table} WHERE ";
+        $conds = [];
+        foreach ($columns as $col) {
+            $conds[] = "$col LIKE :value";
+        }
+        $sql .= implode(' OR ', $conds);
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue(':value', '%' . trim($value) . '%', PDO::PARAM_STR);
+        $stmt->execute();
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $results ?: null;
+    }
+
     /**
      * Executa uma consulta SELECT com as condições WHERE especificadas.
      *
